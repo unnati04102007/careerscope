@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerScope - Discover Your Future</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <header>
+        <nav>
+            <div class="logo">CareerScope</div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('colleges') }}">Colleges</a></li>
+                <li><a href="{{ url_for('login_page') }}" class="btn-outline">Log In</a></li>
+                <li><a href="{{ url_for('login_page', mode='signup') }}" class="btn-primary">Get Started</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content fade-in">
+            <h1>Unlock Your True Potential</h1>
+            <p>AI-driven career guidance tailored to your strengths, interests, and academic profile.</p>
+            <div class="cta-group">
+                <a href="{{ url_for('login_page', mode='signup') }}" class="btn-primary">Start Assessment</a>
+                <a href="#features" class="btn-outline">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" style="padding: 5rem 2rem; max-width: 1200px; margin: 0 auto;">
+        <h2 style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">Why CareerScope?</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            <div class="card">
+                <h3>🎯 Personalized Paths</h3>
+                <p style="color: var(--text-light); margin-top: 1rem;">Get career recommendations based on your unique
+                    skills and marks, not just trends.</p>
+            </div>
+            <div class="card">
+                <h3>🎓 College Explorer</h3>
+                <p style="color: var(--text-light); margin-top: 1rem;">Find the best colleges across India with details
+                    on fees, ratings, and placements.</p>
+            </div>
+            <div class="card">
+                <h3>🤖 AI Assistant</h3>
+                <p style="color: var(--text-light); margin-top: 1rem;">Have questions? Our multilingual chatbot is here
+                    to guide you 24/7.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chatbot Widget Placeholder -->
+    <div id="chatbot-container"></div>
+    <!-- Chatbot Scripts -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chatbot.css') }}">
+    <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- Font Awesome (Required for Chatbot Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</body>
+
+</html>

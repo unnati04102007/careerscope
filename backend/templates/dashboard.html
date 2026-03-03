@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Dashboard - CareerScope</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">CareerScope</div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('colleges') }}">Colleges</a></li>
+                <li><a href="#" class="btn-outline" onclick="logout()">Log Out</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div style="max-width: 1200px; margin: 100px auto; padding: 2rem;">
+        <h1 class="fade-in">Hello, Student!</h1>
+        <p class="fade-in" style="color: var(--text-light);">Based on your profile, here are your best matches:</p>
+
+        <h2 style="margin-top: 2rem;">Top Career Paths</h2>
+        <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 1rem;">
+
+            <!-- Result Card 1 -->
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <h3 style="color: var(--primary);">Data Scientist</h3>
+                    <span
+                        style="background: #dbeafe; color: #1e40af; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.8rem;">98%
+                        Match</span>
+                </div>
+                <p style="margin: 1rem 0; font-size: 0.9rem;">Perfect for you because you love **Maths** and **Coding**.
+                </p>
+                <div style="margin-bottom: 1rem;">
+                    <strong>Next Steps:</strong>
+                    <ul style="font-size: 0.9rem; margin-left: 1rem; color: var(--text-light); list-style: disc;">
+                        <li>B.Tech in CS or B.Stat</li>
+                        <li>Learn Python/SQL</li>
+                    </ul>
+                </div>
+                <a href="{{ url_for('colleges', course='Data Science') }}" class="btn-outline"
+                    style="font-size: 0.9rem; width: 100%; display: block; text-align: center;">View Colleges</a>
+            </div>
+
+            <!-- Result Card 2 -->
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <h3 style="color: var(--secondary);">Financial Analyst</h3>
+                    <span
+                        style="background: #fce7f3; color: #9d174d; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.8rem;">85%
+                        Match</span>
+                </div>
+                <p style="margin: 1rem 0; font-size: 0.9rem;">Recommended based on your **Maths** and **Analytical**
+                    skills.</p>
+                <div style="margin-bottom: 1rem;">
+                    <strong>Next Steps:</strong>
+                    <ul style="font-size: 0.9rem; margin-left: 1rem; color: var(--text-light); list-style: disc;">
+                        <li>B.Com / BBA / Economics</li>
+                        <li>CFA Certification</li>
+                    </ul>
+                </div>
+                <a href="{{ url_for('colleges', course='Finance') }}" class="btn-outline"
+                    style="font-size: 0.9rem; width: 100%; display: block; text-align: center;">View Colleges</a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Chatbot Widget Placeholder -->
+    <div id="chatbot-container"></div>
+    <!-- Chatbot Scripts -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chatbot.css') }}">
+    <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- Font Awesome (Required for Chatbot Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        function logout() {
+            localStorage.removeItem('userData');
+            window.location.href = "{{ url_for('index') }}";
+        }
+    </script>
+</body>
+
+</html>

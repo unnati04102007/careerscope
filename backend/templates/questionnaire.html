@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Student Profile - CareerScope</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">CareerScope</div>
+            <div>Step <span id="current-step">1</span> of 3</div>
+        </nav>
+    </header>
+
+    <div style="max-width: 600px; margin: 100px auto; padding: 2rem;">
+
+        <form id="profile-form" class="card">
+            <!-- Step 1: Academic -->
+            <div class="step active" id="step1">
+                <h2 style="margin-bottom: 1.5rem;">Academic Details</h2>
+                <div class="form-group">
+                    <label>Current Level</label>
+                    <select id="level">
+                        <option>High School (10th)</option>
+                        <option>Higher Secondary (12th)</option>
+                        <option>Undergraduate</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Steam / Major</label>
+                    <select id="stream">
+                        <option>Science (PCM)</option>
+                        <option>Science (PCB)</option>
+                        <option>Commerce</option>
+                        <option>Arts/Humanities</option>
+                    </select>
+                </div>
+                <!-- Marks inputs could be dynamic, simplified here -->
+                <div class="form-group">
+                    <label>Maths Score (%)</label>
+                    <input type="number" placeholder="0-100">
+                </div>
+                <button type="button" class="btn-primary" onclick="nextStep(2)">Next</button>
+            </div>
+
+            <!-- Step 2: Interests -->
+            <div class="step" id="step2">
+                <h2 style="margin-bottom: 1.5rem;">Interests & Hobbies</h2>
+                <div class="form-group">
+                    <label>What do you enjoy doing?</label>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <label><input type="checkbox"> Solving Puzzles</label>
+                        <label><input type="checkbox"> Drawing/Art</label>
+                        <label><input type="checkbox"> Writing</label>
+                        <label><input type="checkbox"> Coding</label>
+                        <label><input type="checkbox"> Helping People</label>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <button type="button" class="btn-outline" onclick="nextStep(1)">Back</button>
+                    <button type="button" class="btn-primary" onclick="nextStep(3)">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Skills -->
+            <div class="step" id="step3">
+                <h2 style="margin-bottom: 1.5rem;">Skills & Goals</h2>
+                <div class="form-group">
+                    <label>Key Skills</label>
+                    <input type="text" placeholder="e.g. Python, Communication, Public Speaking">
+                </div>
+                <div class="form-group">
+                    <label>Career Goal (if any)</label>
+                    <input type="text" placeholder="Any dream job?">
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <button type="button" class="btn-outline" onclick="nextStep(2)">Back</button>
+                    <button type="submit" class="btn-primary">Get Recommendations</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+    <script>
+        function nextStep(step) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+            document.getElementById('current-step').innerText = step;
+        }
+
+        document.getElementById('profile-form').onsubmit = (e) => {
+            e.preventDefault();
+            alert("Profile Saved! Generating recommendations...");
+            window.location.href = "{{ url_for('dashboard') }}";
+        };
+    </script>
+</body>
+
+</html>

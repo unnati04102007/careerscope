@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Explorer - CareerScope</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/colleges.css') }}">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navigation (Assuming standard nav exists or simplified version) -->
+    <nav class="navbar">
+        <div class="logo">CareerScope</div>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/dashboard.html">Dashboard</a></li>
+            <li><a href="/questionnaire.html">Questionnaire</a></li>
+            <li><a href="/colleges.html" class="active">Colleges</a></li>
+        </ul>
+    </nav>
+
+    <!-- Header & Search -->
+    <header class="explorer-header">
+        <div class="explorer-container">
+            <h1 style="text-align: center; margin-bottom: 1.5rem; color: var(--primary-color);">Find Your Dream College
+            </h1>
+
+            <div class="search-bar-container">
+                <input type="text" id="search-input" class="search-input" placeholder="Search for colleges by name...">
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-bar">
+                <div class="filter-group">
+                    <label class="filter-label">State</label>
+                    <select id="state-select" class="custom-select">
+                        <option value="">All States</option>
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Min Rating</label>
+                    <select id="rating-select" class="custom-select">
+                        <option value="0">Any</option>
+                        <option value="9">9+ (Excellent)</option>
+                        <option value="8">8+ (Very Good)</option>
+                        <option value="7">7+ (Good)</option>
+                        <option value="6">6+ (Average)</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Sort By</label>
+                    <select id="sort-select" class="custom-select">
+                        <option value="">Default</option>
+                        <option value="rating_desc">Highest Rating</option>
+                        <option value="fees_asc">Lowest Fees</option>
+                        <option value="placement_desc">Best Placement</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="explorer-container">
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay hidden">
+            <div class="spinner"></div>
+            <div class="loading-text">Finding best colleges for you...</div>
+        </div>
+
+        <!-- College Grid -->
+        <div id="college-grid" class="college-grid">
+            <!-- Cards populated by JS -->
+        </div>
+
+        <!-- Load More -->
+        <button id="load-more-btn" class="load-more-btn hidden">Load More Colleges</button>
+    </main>
+
+    <!-- Chatbot Widget Placeholder -->
+    <div id="chatbot-container"></div>
+
+    <script src="{{ url_for('static', filename='js/colleges.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login - CareerScope</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+
+    <div class="form-container fade-in" style="width: 100%; margin: 0;">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary);" id="form-title">Welcome Back</h2>
+
+        <!-- Login Form -->
+        <form id="login-form">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; border: none; cursor: pointer;">Log
+                In</button>
+        </form>
+
+        <!-- Register Form (Hidden) -->
+        <form id="register-form" style="display: none;">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="Create a password" required>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; border: none; cursor: pointer;">Create
+                Account</button>
+        </form>
+
+        <p style="text-align: center; margin-top: 1.5rem; color: var(--text-light); font-size: 0.9rem;">
+            <span id="toggle-text">Don't have an account?</span>
+            <a href="#" onclick="toggleAuth()" style="color: var(--primary); font-weight: 600;" id="toggle-btn">Sign
+                Up</a>
+        </p>
+
+        <div style="text-align: center; margin-top: 1rem;">
+            <a href="{{ url_for('index') }}" style="font-size: 0.8rem;">Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleAuth() {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const title = document.getElementById('form-title');
+            const toggleText = document.getElementById('toggle-text');
+            const toggleBtn = document.getElementById('toggle-btn');
+
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                title.innerText = 'Welcome Back';
+                toggleText.innerText = "Don't have an account?";
+                toggleBtn.innerText = 'Sign Up';
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                title.innerText = 'Create Account';
+                toggleText.innerText = "Already have an account?";
+                toggleBtn.innerText = 'Log In';
+            }
+        }
+
+        // Check URL for mode=signup
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('mode') === 'signup') {
+            toggleAuth();
+        }
+
+        // Mock Submission
+        document.getElementById('login-form').onsubmit = (e) => {
+            e.preventDefault();
+            // Store mock session
+            localStorage.setItem('userData', JSON.stringify({ name: 'User' }));
+            window.location.href = "{{ url_for('dashboard') }}";
+        };
+
+        document.getElementById('register-form').onsubmit = (e) => {
+            e.preventDefault();
+            localStorage.setItem('userData', JSON.stringify({ name: 'New User' }));
+            window.location.href = "{{ url_for('questionnaire') }}"; // New users go to questionnaire
+        };
+    </script>
+</body>
+
+</html>
