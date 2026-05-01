@@ -1,114 +1,69 @@
-from flask import Flask, jsonify, request, render_template, send_from_directory
-from flask_cors import CORS
-from config import Config
-import sys
 import os
+from flask import Flask, render_template, session
+from flask_cors import CORS
+from database.models.models import db
 
-# Fix import path for models if running from root
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
+# Initialize Flask app
+app = Flask(__name__, template_folder='templates', static_folder='static')
 
-from database.models import db, User, Career, College, UserResponse
-from chatbot.chatbot_logic import get_chat_response
+# Configuration
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'career-scope-dev-secret-key-12345'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///careerscope.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['PERMANENT_SESSION_LIFETIME'] = 604800  # 7 days
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = False  # Set to True in production with HTTPS
 
-# Initialize Flask with custom template and static folders
-app = Flask(__name__, 
-            template_folder='templates',
-            static_folder='static')
-app.config.from_object(Config)
-CORS(app) # Enable CORS for frontend
+# Enable CORS for frontend, allowing credentials for sessions
+CORS(app, supports_credentials=True, resources={
+    r"/api/*": {
+        "origins": ["http://127.0.0.1:5000", "http://localhost:5000"],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type"]
+    }
+})
 
+# Initialize database
 db.init_app(app)
 
-# --- View Routes ---
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/login.html')
-def login_page():
-    return render_template('login.html')
-
-@app.route('/register.html')
-def register_page():
-     # In our design, register is part of login.html or handled effectively there.
-     # If separate, render it, but for now we map it to login or just render login with a parameter in frontend JS
-     return render_template('login.html')
-
-@app.route('/dashboard.html')
-def dashboard():
-    return render_template('dashboard.html')
-
-@app.route('/questionnaire.html')
-def questionnaire():
-    return render_template('questionnaire.html')
-
-@app.route('/colleges.html')
-def colleges():
-    return render_template('colleges.html')
-
-@app.route('/favicon.ico')
-def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'),
-                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
-
-# --- API Routes ---
-
-# --- API Routes ---
-
-@app.route('/api/health')
-def health_check():
-    return jsonify({"status": "healthy", "msg": "CareerScope Backend Running"})
-
 # Register Blueprints
-from backend.routes.colleges import colleges_bp
-from backend.routes.chatbot import chatbot_bp
+from routes.auth import auth_bp
+from routes.quiz import quiz_bp
+from routes.careers import careers_bp
+from routes.colleges import colleges_bp
+from routes.chatbot import chatbot_bp
 
+app.register_blueprint(auth_bp)
+app.register_blueprint(quiz_bp)
+app.register_blueprint(careers_bp)
 app.register_blueprint(colleges_bp)
 app.register_blueprint(chatbot_bp)
 
-# Auth Routes (Mock for now, real implementation would use JWT/Session)
-@app.route('/api/auth/register', methods=['POST'])
-def register():
-    data = request.json
-    # In real app: hash password, save to DB
-    # For prototype: Just mock success
-    return jsonify({"success": True, "message": "User registered!", "user": {"name": data.get('name')}})
-
-@app.route('/api/auth/login', methods=['POST'])
-def login():
-    data = request.json
-    # For prototype: Accept any login
-    return jsonify({"success": True, "token": "mock-token-123", "user": {"name": "Test User"}})
-
-# Recommendation Route (Mock Logic)
-@app.route('/api/recommend', methods=['POST'])
-def recommend():
-    # In a real engine, we would parse user answers.
-    # For now, we return all careers or filter slightly if we had logic enabled.
-    # To keep it simple and showing DB integration, we return all careers.
-    
-    careers = Career.query.all()
-    recommendations = []
-    
-    # Mock matching logic (just to show variability)
-    # in reality, you'd match `item.required_skills` with `user_skills`
-    for item in careers:
-        recommendations.append({
-            "title": item.title,
-            "match": "85%", # Placeholder match score
-            "reason": f"Matches your interest in {item.recommended_stream}",
-            "salary": item.avg_salary
-        })
-        
-    return jsonify({"recommendations": recommendations})
-
-
-# Initialize DB
+# Create database tables
 with app.app_context():
     db.create_all()
 
+# Serve React frontend
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_react_app(path):
+    """
+    Serve index.html for all routes to allow React to handle routing
+    Only for non-API routes
+    """
+    if path.startswith('api/'):
+        return {'error': 'API route not found'}, 404
+    return render_template('index.html')
+
+# Error handlers
+@app.errorhandler(404)
+def not_found(error):
+    return render_template('index.html')
+
+@app.errorhandler(500)
+def internal_error(error):
+    return {'error': 'Internal server error'}, 500
+
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5000, host='0.0.0.0')
